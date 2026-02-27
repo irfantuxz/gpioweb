@@ -1,6 +1,6 @@
 # GPIOweb Dashboard
 ### by @Irfan_TuxZ [ig](https://www.instagram.com/irfan_tuxz)
-*(English version below)*
+_(English version below)_
 
 Dashboard GPIO Real-Time berbasis Web untuk Raspberry Pi.
 Aplikasi ini menyediakan antarmuka interaktif untuk memonitor dan mengontrol pin GPIO menggunakan **Flask, WebSockets, dan `gpiozero`**. 
@@ -8,8 +8,8 @@ Aplikasi ini menyediakan antarmuka interaktif untuk memonitor dan mengontrol pin
 Sistem ini secara otomatis mendeteksi model Raspberry Pi Anda dan mengonfigurasi *backend* yang sesuai (`lgpio` untuk Raspberry Pi 5, dan `pigpiod` untuk Raspberry Pi 4 dan versi lebih lama).
 
 ## Cara Instalasi
-
-Jalankan perintah berikut di terminal Raspberry Pi Anda untuk mengunduh dan menginstal *service* GPIOweb:
+> [!TIP]
+>Jalankan perintah berikut di **terminal** Raspberry Pi Anda untuk mengunduh dan menginstal _service_ **GPIOweb**:
 
 ```bash
 # Unduh repositori
@@ -46,9 +46,9 @@ Skrip `setup.sh` akan secara otomatis mendeteksi perangkat keras Anda dan mengin
 - Paket `lgpio` diinstal untuk **Raspberry Pi 5**.
 - Daemon `pigpio` dikompilasi dan diinstal untuk **Raspberry Pi 1, 2, 3, dan 4.**
 
-Skrip ini juga akan mendaftarkan GPIOweb sebagai *system daemon service*, sehingga aplikasi web ini akan berjalan otomatis di latar belakang (*background*) setiap kali Raspberry Pi dihidupkan.
+Skrip ini juga akan mendaftarkan GPIOweb sebagai _system daemon service_, sehingga aplikasi web ini akan berjalan otomatis di latar belakang (_background_) setiap kali Raspberry Pi dihidupkan.
 
-*Perintah Manajemen Service:*
+_Perintah Manajemen Service:_
 Anda dapat mengontrol service GPIOweb menggunakan perintah standar `systemctl`:
 
 ```Bash
@@ -61,10 +61,11 @@ sudo systemctl restart gpioweb
 # GPIOweb Dashboard (English)
 Web-based Real-Time GPIO Dashboard for Raspberry Pi. This application provides an interactive UI to monitor and control GPIO pins using **Flask, WebSockets, and `gpiozero`.**
 
-It automatically detects your Raspberry Pi model and configures the appropriate backend (`lgpio` for *Raspberry Pi 5*, and `pigpiod` for *Raspberry Pi 4 and older*).
+It automatically detects your Raspberry Pi model and configures the appropriate backend (`lgpio` for _Raspberry Pi 5_, and `pigpiod` for _Raspberry Pi 4 and older_).
 
 ## How to Install
-Run the following commands in your Raspberry Pi terminal to download and install the GPIOweb service:
+> [!TIP]
+>Run the following commands in your Raspberry Pi _**terminal**_ to download and install the GPIOweb service:
 
 ```Bash
 # Download the repository
