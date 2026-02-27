@@ -95,13 +95,20 @@ systemctl daemon-reload
 systemctl enable gpioweb
 systemctl restart gpioweb
 
+# Definisi Warna
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+NC='\033[0m' # No Color (Reset ke default)
+
 echo "========================================="
-echo "Instalasi Selesai!"
-echo "Contoh python blinkled-example.py"
-echo "Contoh python test-example.py"
+echo -e "${GREEN}Instalasi Selesai!${NC}"
+echo -e "Contoh ${YELLOW}python blinkled-example.py${NC}"
+echo -e "Contoh ${YELLOW}python test-example.py${NC}"
 echo "========================================="
-echo "Status service GPIOweb:"
+echo -e "${BOLD}Status service GPIOweb:${NC}"
 systemctl is-active gpioweb
-echo "Silakan akses dashboard di http://localhost:5000"
-echo "Atau alamat local network di http://ALAMAT_IP_RASPI:5000"
+echo -e "Silakan akses dashboard GPIOweb di ${CYAN}http://localhost:5000${NC}"
+echo -e "Atau lewat PC/HP local network di ${CYAN}http://ALAMAT_IP_RASPI:5000${NC}"
 echo "========================================="
