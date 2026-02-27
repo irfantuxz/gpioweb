@@ -100,4 +100,5 @@ echo "Instalasi Selesai!"
 echo "Status service GPIOweb:"
 systemctl is-active gpioweb
 echo "Silakan akses dashboard di http://localhost:5000"
+echo "Atau alamat local network di http://ALAMAT_IP_RASPI:5000"
 echo "========================================="
