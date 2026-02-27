@@ -17,7 +17,7 @@ wget https://github.com/irfantuxz/gpioweb/archive/refs/heads/master.zip -O gpiow
 
 # Ekstrak file
 unzip gpioweb-master.zip
-cd gpioweb-master
+cd gpioweb-main
 
 # Jalankan script instalasi (membutuhkan akses sudo)
 sudo bash setup.sh
@@ -72,7 +72,7 @@ wget https://github.com/irfantuxz/gpioweb/archive/refs/heads/master.zip -O gpiow
 
 # Extract the archive
 unzip gpioweb-master.zip
-cd gpioweb-master
+cd gpioweb-main
 
 # Run the setup script (requires sudo privileges)
 sudo bash setup.sh
