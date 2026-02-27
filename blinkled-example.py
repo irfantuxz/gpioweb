@@ -7,7 +7,7 @@ from time import sleep
 Device.pin_factory = PiGPIOFactory(host='localhost')
 
 # Inisialisasi LED di GPIO 4
-led_merah = LED(4)
+led1 = LED(4)
 
 print("Memulai program blink pada GPIO 4...")
 print("Cek dashboard web Anda, indikator GPIO 4 akan ikut berkedip!")
@@ -15,9 +15,10 @@ print("Tekan Ctrl+C untuk berhenti.")
 
 try:
     while True:
-        led_merah.on()
+        led1.on()
         sleep(1)
-        led_merah.off()
+        led1.off()
         sleep(1)
 except KeyboardInterrupt:
+    led1.off()
     print("Program dihentikan.")
