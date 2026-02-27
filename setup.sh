@@ -97,6 +97,9 @@ systemctl restart gpioweb
 
 echo "========================================="
 echo "Instalasi Selesai!"
+echo "Contoh python blinkled-example.py"
+echo "Contoh python test-example.py"
+echo "========================================="
 echo "Status service GPIOweb:"
 systemctl is-active gpioweb
 echo "Silakan akses dashboard di http://localhost:5000"
