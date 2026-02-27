@@ -27,8 +27,8 @@ sudo bash setup.sh
 Setelah terinstal dan berjalan, buka web browser dan akses alamat berikut:
 
 > [!TIP]
-> - Akses Lokal (di dalam Raspi): `http://localhost:5000`
-> - Akses Jaringan (dari PC/Smartphone/Perangkat lain): `http://<IP_RASPBERRY_PI_ANDA>:5000`
+> - Akses Lokal (langsung di dalam **OS Raspi**): **`http://localhost:5000`**
+> - Akses Jaringan (dari **PC/Smartphone/Perangkat lain**): **`http://<IP_RASPBERRY_PI_ANDA>:5000`**
 
 ## Contoh Skrip Python yang Disertakan
 Repositori ini menyertakan skrip pengujian Python untuk mendemonstrasikan integrasi `gpiozero` yang berjalan berdampingan dengan dashboard GPIOweb:
@@ -82,8 +82,8 @@ sudo bash setup.sh
 Once installed and running, open a web browser and navigate to:
 
 > [!TIP]
-> - Local Access (from RaspberryPi): `http://localhost:5000`
-> - Network Access (from PC/other devices): `http://<YOUR_RASPBERRY_PI_IP>:5000`
+> - Local Access (from RaspberryPi): **`http://localhost:5000`**
+> - Network Access (from PC/other devices): **`http://<YOUR_RASPBERRY_PI_IP>:5000`**
 
 ## Included Examples
 This repository includes Python test scripts to demonstrate `gpiozero` integration alongside the **GPIOweb dashboard**:
