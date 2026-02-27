@@ -26,8 +26,9 @@ sudo bash setup.sh
 ## Cara Akses GPIOweb
 Setelah terinstal dan berjalan, buka web browser dan akses alamat berikut:
 
-- Akses Lokal (di dalam Raspi): `http://localhost:5000`
-- Akses Jaringan (dari PC/Smartphone/Perangkat lain): `http://<IP_RASPBERRY_PI_ANDA>:5000`
+> [!TIP]
+> - Akses Lokal (di dalam Raspi): `http://localhost:5000`
+> - Akses Jaringan (dari PC/Smartphone/Perangkat lain): `http://<IP_RASPBERRY_PI_ANDA>:5000`
 
 ## Contoh Skrip Python yang Disertakan
 Repositori ini menyertakan skrip pengujian Python untuk mendemonstrasikan integrasi `gpiozero` yang berjalan berdampingan dengan dashboard GPIOweb:
@@ -67,10 +68,10 @@ Run the following commands in your Raspberry Pi terminal to download and install
 
 ```Bash
 # Download the repository
-wget https://github.com/irfantuxz/gpioweb/archive/refs/heads/master.zip -O gpioweb.zip
+wget https://github.com/irfantuxz/gpioweb/archive/refs/heads/master.zip -O gpioweb-master.zip
 
 # Extract the archive
-unzip gpioweb.zip
+unzip gpioweb-master.zip
 cd gpioweb-master
 
 # Run the setup script (requires sudo privileges)
@@ -80,8 +81,9 @@ sudo bash setup.sh
 ## How to Access GPIOweb
 Once installed and running, open a web browser and navigate to:
 
-- Local Access: `http://localhost:5000`
-- Network Access: `http://<YOUR_RASPBERRY_PI_IP>:5000`
+> [!TIP]
+> - Local Access (from RaspberryPi): `http://localhost:5000`
+> - Network Access (from PC/other devices): `http://<YOUR_RASPBERRY_PI_IP>:5000`
 
 ## Included Examples
 This repository includes Python test scripts to demonstrate `gpiozero` integration alongside the **GPIOweb dashboard**:
