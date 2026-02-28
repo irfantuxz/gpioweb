@@ -1,3 +1,6 @@
+## Screenshot GPIOweb Dashboard
+![Screenshot on Raspberry Pi 4](screenshot.png)
+
 # GPIOweb Dashboard
 ### by @Irfan_TuxZ [ig](https://www.instagram.com/irfan_tuxz)
 _(English version below)_
