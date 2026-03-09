@@ -1,17 +1,15 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_socketio import SocketIO
-from gpiozero import DigitalOutputDevice, pi_info, Device
+from gpiozero import DigitalOutputDevice, InputDevice, pi_info, Device
 from gpiozero.pins.pigpio import PiGPIOFactory
 import time
 
-# Import lgpio, bypass jika tidak tersedia di sistem
 try:
     from gpiozero.pins.lgpio import LGPIOFactory
 except ImportError:
     LGPIOFactory = None
 
 app = Flask(__name__)
-# Inisialisasi WebSocket
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 def get_pi_model():
@@ -23,99 +21,94 @@ def get_pi_model():
 
 model_name = get_pi_model()
 
-# --- Auto-Select Backend (lgpio untuk Pi 5, pigpiod untuk lainnya) ---
+# --- Auto-Select Backend ---
 if "Raspberry Pi 5" in model_name and LGPIOFactory is not None:
     Device.pin_factory = LGPIOFactory()
-    print("Backend: lgpio (Raspberry Pi 5 terdeteksi)")
 else:
     try:
         Device.pin_factory = PiGPIOFactory(host='localhost')
-        print("Backend: pigpiod")
-    except Exception as e:
-        print(f"Gagal inisialisasi pigpiod: {e}")
+    except:
+        pass
 
-bcm_pins = [
-    2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 
-    16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27
-]
+gpio_active_devices = {}
 
-gpio_devices = {}
-
-for pin in bcm_pins:
-    try:
-        gpio_devices[pin] = DigitalOutputDevice(pin)
-    except Exception as e:
-        print(f"Gagal inisialisasi BCM {pin}: {e}")
+def get_or_create_device(bcm, mode="output", pull=None):
+    # """Fungsi untuk mengambil kontrol pin secara dinamis"""
+    if bcm in gpio_active_devices:
+        gpio_active_devices[bcm].close()
+    
+    if mode == "output":
+        gpio_active_devices[bcm] = DigitalOutputDevice(bcm)
+    else:
+        # pull 'up', pull 'down', atau None
+        gpio_active_devices[bcm] = InputDevice(bcm, pull_up=(pull == 'up'))
+    return gpio_active_devices[bcm]
 
 @app.route('/')
 def index():
-    try:
-        info = pi_info()
-        soc_name = info.soc
-        ram_size = f"{info.memory}MB" if info.memory < 1024 else f"{info.memory // 1024}GB"
-    except Exception:
-        soc_name = "Unknown SoC"
-        ram_size = "Unknown RAM"
+    return render_template('index.html', model_name=model_name)
 
-    return render_template('index.html', model_name=model_name, soc_name=soc_name, ram_size=ram_size)
-
-# Update pada fungsi background_thread di app.py
 def background_thread():
-    """Loop membaca status hardware (value & function) lalu dikirim via WebSocket"""
+    # """Monitoring mode menggunakan pin_factory (Non-blocking)"""
     while True:
         status = {}
-        for pin, device in gpio_devices.items():
+        for bcm in range(2, 28): # Scan BCM 2-27
             try:
-                # Mengambil mode pin secara dinamis
-                mode = device.pin.function 
-                status[pin] = {
-                    'value': device.value,
-                    'mode': mode.upper()
+                # Menggunakan pin_factory secara langsung untuk membaca status tanpa "mengunci" pin
+                raw_pin = Device.pin_factory.pin(bcm)
+                mode = raw_pin.function
+                
+                # Deteksi Pull Status (bergantung pada kemampuan backend factory)
+                pull = "FLOAT"
+                try:
+                    # Pada banyak factory, kita bisa mengecek pull lewat internal state
+                    pull = raw_pin.pull
+                except: pass
+
+                status[bcm] = {
+                    'value': raw_pin.state,
+                    'mode': mode.upper(),
+                    'pull': pull.upper() if pull else "NONE"
                 }
-            except Exception:
+                # Jangan lupa tutup handle raw_pin agar tidak leak
+                raw_pin.close()
+            except:
                 continue
                 
         socketio.emit('status_update', status)
         socketio.sleep(0.1)
 
-@socketio.on('connect')
-def handle_connect():
-    pass # Status pertama otomatis terkirim dari background_thread
-
-@socketio.on('toggle')
+@socketio.on('toggle_action')
 def handle_toggle(data):
-    bcm_pin = data.get('bcm')
-    write_mode = data.get('write_mode', False)
+    # """Klik Kiri: Toggle Value (Output) atau Toggle Pull (Input)"""
+    bcm = data.get('bcm')
+    current_mode = data.get('mode').lower()
     
-    if write_mode and bcm_pin in gpio_devices:
-        device = gpio_devices[bcm_pin]
+    if current_mode == 'output':
+        dev = get_or_create_device(bcm, mode='output')
+        dev.toggle()
+    else:
+        # Jika input, toggle antara Pull Up dan Pull Down
+        current_pull = data.get('pull').lower()
+        new_pull = 'down' if current_pull == 'up' else 'up'
+        get_or_create_device(bcm, mode='input', pull=new_pull)
 
-        try:
-            # CEK LAPIS 1: Cek dan paksa mode ke OUTPUT secara dinamis
-            # Ini sangat berguna jika script eksternal (seperti testled) mengubahnya jadi INPUT
-            if device.pin.function != 'output':
-                print(f"Pin {bcm_pin} berubah jadi input! Memaksa kembali ke output...")
-                device.pin.function = 'output'
+@socketio.on('change_mode')
+def handle_change_mode(data):
+    # """Klik Kanan: Switch antara Input dan Output"""
+    bcm = data.get('bcm')
+    target_mode = 'input' if data.get('current_mode').lower() == 'output' else 'output'
+    get_or_create_device(bcm, mode=target_mode)
 
-            # Eksekusi perubahan status
-            device.toggle()
-
-        except Exception as e:
-            print(f"Error fatal pada pin {bcm_pin}: {e}. Melakukan reset objek...")
-
-            # CEK LAPIS 2: Re-inisialisasi bersih jika Lapis 1 gagal
-            try:
-                # Lepaskan ikatan objek lama agar TIDAK terjadi GPIOPinInUse
-                device.close() 
-            except Exception:
-                pass
-
-            # Buat objek baru (otomatis mengatur ulang ke Output)
-            new_device = DigitalOutputDevice(bcm_pin)
-            gpio_devices[bcm_pin] = new_device
-            new_device.toggle()
+@socketio.on('release_all')
+def release_all():
+    # """Dijalankan saat Write Mode dimatikan di UI: Melepas semua kuncian pin"""
+    global gpio_active_devices
+    for bcm in list(gpio_active_devices.keys()):
+        gpio_active_devices[bcm].close()
+        del gpio_active_devices[bcm]
+    print("Semua GPIO dilepaskan (Monitoring Mode Only)")
 
 if __name__ == '__main__':
-    # Mulai broadcast status di background
     socketio.start_background_task(background_thread)
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True, use_reloader=False, allow_unsafe_werkzeug=True)
+    socketio.run(app, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)
