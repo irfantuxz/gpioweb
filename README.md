@@ -6,7 +6,8 @@
 _(English version below)_
 
 Dashboard GPIO Real-Time berbasis Web untuk Raspberry Pi.
-Aplikasi ini menyediakan antarmuka interaktif untuk memonitor dan mengontrol pin GPIO menggunakan **Flask, WebSockets, dan `gpiozero`**. 
+Aplikasi ini menyediakan antarmuka interaktif untuk memonitor dan mengontrol pin GPIO menggunakan **Flask, WebSockets, dan `gpiozero`**.
+`Bisa berjalan berdampingan dengan RPi.GPIO`.
 
 Sistem ini secara otomatis mendeteksi model Raspberry Pi Anda dan mengonfigurasi *backend* yang sesuai (`lgpio` untuk Raspberry Pi 5, dan `pigpiod` untuk Raspberry Pi 4 dan versi lebih lama).
 
@@ -35,6 +36,9 @@ Setelah terinstal dan berjalan, buka web browser dan akses alamat berikut:
 
 ## Contoh Skrip Python yang Disertakan
 Repositori ini menyertakan skrip pengujian Python untuk mendemonstrasikan integrasi `gpiozero` yang berjalan berdampingan dengan dashboard GPIOweb:
+
+- `rpi-gpio-example.py`
+Kode blink led dengan RPi.GPIO
 
 - `python test-example.py`
 Kode sederhana menggunakan gpiozero. 
