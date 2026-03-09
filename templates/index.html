@@ -11,8 +11,8 @@
             --pin-power5v: #ff6b97;   --pin-power3v: #ff9f4d;  --pin-gnd: #2b2f3a;
             --pin-gpio-off: #3fb0ff;  --pin-gpio-on: #2fd27a;
         }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; align-items: center; padding: 0px; margin: 0px; }
-        .subtitle { color: #a6adc8; margin-bottom: 10px; text-align: center; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
+        .subtitle { color: #a6adc8; margin-bottom: 20px; text-align: center; }
         
         /* UI Control Read/Write Mode */
         .controls { margin-bottom: 20px; display: flex; align-items: center; gap: 15px; background: #1a2235; padding: 12px 25px; border-radius: 8px; border: 1px solid #333; }
@@ -28,7 +28,20 @@
 
         .board { background-color: var(--board-bg); padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .header-j8 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background-color: #222; padding: 20px; border-radius: 8px; border: 2px solid #333; }
-        
+
+        /* Gaya untuk label mode (IN/OUT) */
+        .pin .mode-badge {
+            font-size: 9px;
+            padding: 2px 4px;
+            border-radius: 3px;
+            margin-right: 5px;
+            font-weight: bold;
+            min-width: 25px;
+            text-align: center;
+        }
+        .mode-in { background-color: #f1c40f; color: #000; } /* Kuning untuk Input */
+        .mode-out { background-color: #9b59b6; color: #fff; } /* Ungu untuk Output */
+
         /* Layout Pin */
         .pin { display: flex; align-items: center; justify-content: space-between; width: 280px; padding: 8px 10px; border-radius: 6px; font-size: 13px; font-weight: bold; color: #111; transition: 0.2s; box-sizing: border-box; }
         .pin-left { flex-direction: row; }
@@ -117,6 +130,7 @@
 
         // Modifikasi Render Pin untuk 4 Kolom Visual
         pinMap.forEach(p => {
+        
             const div = document.createElement('div');
             const isOdd = p.pin % 2 !== 0; 
             div.className = `pin ${p.type} ${isOdd ? 'pin-left' : 'pin-right'}`; 
@@ -124,9 +138,15 @@
             
             const funcHtml = `<span class="function ${p.func ? '' : 'empty-func'}">${p.func || '-'}</span>`;
             
+            // Tambahkan span dengan class 'mode-badge' di sini
+            const modeHtml = p.type === 'gpio' ? `<span class="mode-badge" id="mode-${p.bcm}">-</span>` : '';
+
             div.innerHTML = `
                 ${funcHtml}
-                <span class="name">${p.name}</span>
+                <div style="display: flex; align-items: center;">
+                    ${modeHtml}
+                    <span class="name">${p.name}</span>
+                </div>
                 <span class="number">${p.pin}</span>
             `;
             
@@ -144,12 +164,22 @@
         // --- Koneksi WebSockets ---
         const socket = io();
 
-        // Menggantikan fetch loop dengan event listener real-time
         socket.on('status_update', (status) => {
-            for (const [bcm, state] of Object.entries(status)) {
+            for (const [bcm, data] of Object.entries(status)) {
                 const el = document.getElementById(`pin-${bcm}`);
-                if (el) {
-                    state ? el.classList.add('on') : el.classList.remove('on');
+                const modeEl = document.getElementById(`mode-${bcm}`);
+                
+                if (el && modeEl) {
+                    // Update Status ON/OFF
+                    data.value ? el.classList.add('on') : el.classList.remove('on');
+                    
+                    // Update Teks & Warna Mode
+                    modeEl.textContent = data.mode;
+                    if (data.mode === 'INPUT') {
+                        modeEl.className = 'mode-badge mode-in';
+                    } else {
+                        modeEl.className = 'mode-badge mode-out';
+                    }
                 }
             }
         });
@@ -162,6 +192,3 @@
 </body>
 
 </html>
-
-
-
