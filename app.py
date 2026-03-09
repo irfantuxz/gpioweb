@@ -59,13 +59,24 @@ def index():
 
     return render_template('index.html', model_name=model_name, soc_name=soc_name, ram_size=ram_size)
 
-# --- Background Thread WebSocket ---
+# Update pada fungsi background_thread di app.py
 def background_thread():
-    """Loop membaca status hardware murni lalu dikirim otomatis ke semua klien via WebSocket"""
+    """Loop membaca status hardware (value & function) lalu dikirim via WebSocket"""
     while True:
-        status = {pin: device.value for pin, device in gpio_devices.items()}
+        status = {}
+        for pin, device in gpio_devices.items():
+            try:
+                # Mengambil mode pin secara dinamis
+                mode = device.pin.function 
+                status[pin] = {
+                    'value': device.value,
+                    'mode': mode.upper()
+                }
+            except Exception:
+                continue
+                
         socketio.emit('status_update', status)
-        socketio.sleep(0.1) # Kecepatan refresh 100ms
+        socketio.sleep(0.1)
 
 @socketio.on('connect')
 def handle_connect():
