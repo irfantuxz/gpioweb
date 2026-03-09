@@ -1,4 +1,4 @@
-## Screenshot GPIOweb Dashboard
+## Screenshot GPIOweb Dashboard (v.1.3)
 ![Screenshot on Raspberry Pi 4](screenshot.png)
 
 # GPIOweb Dashboard
@@ -34,6 +34,7 @@ Setelah terinstal dan berjalan, buka web browser dan akses alamat berikut:
 > - Akses Lokal (langsung di dalam **OS Raspi**): **`http://localhost:5000`**
 > - Akses Jaringan (dari **PC/Smartphone/Perangkat lain**): **`http://<IP_RASPBERRY_PI_ANDA>:5000`**
 > - Aktifkan switch "READ-ONLY write state" untuk mengaktifkan GPIO dengan click langsung.
+> - Klik kiri mengubah status HIGH/LOW, klik kanan mengubah mode INPUT/OUTPUT
 > - ![Color Info](colorinfo.png)
 
 ## Contoh Skrip Python yang Disertakan
@@ -96,6 +97,7 @@ Once installed and running, open a web browser and navigate to:
 > - Local Access (from RaspberryPi): **`http://localhost:5000`**
 > - Network Access (from PC/other devices): **`http://<YOUR_RASPBERRY_PI_IP>:5000`**
 > - Toggle switch "READ-ONLY write state" to enable GPIO write.
+> - Left click change status HIGH/LOW, right click mode INPUT/OUTPUT
 > - ![Color Info](colorinfo.png)
 
 ## Included Examples
