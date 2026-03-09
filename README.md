@@ -33,6 +33,7 @@ Setelah terinstal dan berjalan, buka web browser dan akses alamat berikut:
 > [!TIP]
 > - Akses Lokal (langsung di dalam **OS Raspi**): **`http://localhost:5000`**
 > - Akses Jaringan (dari **PC/Smartphone/Perangkat lain**): **`http://<IP_RASPBERRY_PI_ANDA>:5000`**
+![Color Info](colorinfo.png)
 
 ## Contoh Skrip Python yang Disertakan
 Repositori ini menyertakan skrip pengujian Python untuk mendemonstrasikan integrasi `gpiozero` yang berjalan berdampingan dengan dashboard GPIOweb:
@@ -67,6 +68,7 @@ sudo systemctl restart gpioweb
 
 # GPIOweb Dashboard (English)
 Web-based Real-Time GPIO Dashboard for Raspberry Pi. This application provides an interactive UI to monitor and control GPIO pins using **Flask, WebSockets, and `gpiozero`.**
+**Can use side-by-side using `RPi.GPIO`**.
 
 It automatically detects your Raspberry Pi model and configures the appropriate backend (`lgpio` for _Raspberry Pi 5_, and `pigpiod` for _Raspberry Pi 4 and older_).
 
@@ -92,9 +94,13 @@ Once installed and running, open a web browser and navigate to:
 > [!TIP]
 > - Local Access (from RaspberryPi): **`http://localhost:5000`**
 > - Network Access (from PC/other devices): **`http://<YOUR_RASPBERRY_PI_IP>:5000`**
+![Color Info](colorinfo.png)
 
 ## Included Examples
 This repository includes Python test scripts to demonstrate `gpiozero` integration alongside the **GPIOweb dashboard**:
+
+- `rpi-gpio-example.py`
+Program led blink using `RPi.GPIO`
 
 - `python test-example.py`
 A simple script using gpiozero.
