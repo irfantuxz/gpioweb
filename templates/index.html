@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.9">
     <title>GPIOweb Dashboard</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>  -->
+    <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
     <style>
         :root {
             --bg-color: #0b1020;      --text-color: #e6eef8;   --board-bg: #06070a;
@@ -29,16 +30,20 @@
         .board { background-color: var(--board-bg); padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .header-j8 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background-color: #222; padding: 20px; border-radius: 8px; border: 2px solid #333; }
 
-        /* Gaya untuk label mode (IN/OUT) */
         .pin .mode-badge {
             font-size: 9px;
-            padding: 2px 4px;
-            border-radius: 3px;
-            margin-right: 5px;
-            font-weight: bold;
-            min-width: 25px;
+            padding: 3px;
+            border-radius: 4px;
+            margin-right: 8px;
+            font-weight: 800;
+            min-width: 45px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+            text-transform: uppercase;
         }
+        .pull-label { font-size: 8px; opacity: 0.8; margin-top: 1px; border-top: 1px solid rgba(0,0,0,0.1); }
         .mode-in { background-color: #f1c40f; color: #000; } /* Kuning untuk Input */
         .mode-out { background-color: #9b59b6; color: #fff; } /* Ungu untuk Output */
 
@@ -115,46 +120,51 @@
         const modeStatus = document.getElementById('modeStatus');
         const mainBoard = document.getElementById('mainBoard');
 
-        // Logic visual mode toggle
+        // Tambahkan listener untuk Write Mode Toggle agar melepas pin saat OFF
         writeToggle.addEventListener('change', (e) => {
-            if(e.target.checked) {
-                modeStatus.textContent = 'WRITE MODE';
-                modeStatus.className = 'mode-label write';
-                mainBoard.classList.add('write-mode');
-            } else {
+            if(!e.target.checked) {
+                socket.emit('release_all'); // Beritahu server untuk close() semua objek
                 modeStatus.textContent = 'READ ONLY';
                 modeStatus.className = 'mode-label read';
                 mainBoard.classList.remove('write-mode');
+            } else {
+                modeStatus.textContent = 'WRITE MODE';
+                modeStatus.className = 'mode-label write';
+                mainBoard.classList.add('write-mode');
             }
         });
 
-        // Modifikasi Render Pin untuk 4 Kolom Visual
+        // Modifikasi Render Pin
         pinMap.forEach(p => {
-        
             const div = document.createElement('div');
             const isOdd = p.pin % 2 !== 0; 
             div.className = `pin ${p.type} ${isOdd ? 'pin-left' : 'pin-right'}`; 
             if (p.bcm !== null) div.id = `pin-${p.bcm}`;
             
-            const funcHtml = `<span class="function ${p.func ? '' : 'empty-func'}">${p.func || '-'}</span>`;
-            
-            // Tambahkan span dengan class 'mode-badge' di sini
-            const modeHtml = p.type === 'gpio' ? `<span class="mode-badge" id="mode-${p.bcm}">-</span>` : '';
+            const modeHtml = p.type === 'gpio' ? `<div class="mode-badge" id="mode-${p.bcm}"><span>-</span><span class="pull-label">-</span></div>` : '';
 
             div.innerHTML = `
-                ${funcHtml}
-                <div style="display: flex; align-items: center;">
-                    ${modeHtml}
-                    <span class="name">${p.name}</span>
-                </div>
+                <span class="function ${p.func ? '' : 'empty-func'}">${p.func || '-'}</span>
+                <div style="display: flex; align-items: center;">${modeHtml}<span class="name">${p.name}</span></div>
                 <span class="number">${p.pin}</span>
             `;
             
             if (p.type === 'gpio') {
+                // KLIK KIRI: Toggle Value atau Toggle Pull
                 div.addEventListener('click', () => {
-                    // Validasi ganda: Klien hanya emit jika sakelar menyala
                     if (writeToggle.checked) {
-                        socket.emit('toggle', { bcm: p.bcm, write_mode: true });
+                        const mode = div.getAttribute('data-mode');
+                        const pull = div.getAttribute('data-pull');
+                        socket.emit('toggle_action', { bcm: p.bcm, mode: mode, pull: pull });
+                    }
+                });
+
+                // KLIK KANAN: Ganti Mode (Input/Output)
+                div.addEventListener('contextmenu', (e) => {
+                    if (writeToggle.checked) {
+                        e.preventDefault(); // Mencegah menu browser muncul
+                        const mode = div.getAttribute('data-mode');
+                        socket.emit('change_mode', { bcm: p.bcm, current_mode: mode });
                     }
                 });
             }
@@ -170,16 +180,17 @@
                 const modeEl = document.getElementById(`mode-${bcm}`);
                 
                 if (el && modeEl) {
-                    // Update Status ON/OFF
+                    // Simpan state di atribut elemen untuk referensi klik
+                    el.setAttribute('data-mode', data.mode);
+                    el.setAttribute('data-pull', data.pull);
+
                     data.value ? el.classList.add('on') : el.classList.remove('on');
                     
-                    // Update Teks & Warna Mode
-                    modeEl.textContent = data.mode;
-                    if (data.mode === 'INPUT') {
-                        modeEl.className = 'mode-badge mode-in';
-                    } else {
-                        modeEl.className = 'mode-badge mode-out';
-                    }
+                    // Render Badge (Atas: Mode, Bawah: Pull)
+                    modeEl.querySelector('span:first-child').textContent = data.mode;
+                    modeEl.querySelector('.pull-label').textContent = data.mode === 'INPUT' ? data.pull : '';
+                    
+                    modeEl.className = `mode-badge ${data.mode === 'INPUT' ? 'mode-in' : 'mode-out'}`;
                 }
             }
         });
@@ -192,4 +203,3 @@
 </body>
 
 </html>
-
