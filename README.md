@@ -33,7 +33,8 @@ Setelah terinstal dan berjalan, buka web browser dan akses alamat berikut:
 > [!TIP]
 > - Akses Lokal (langsung di dalam **OS Raspi**): **`http://localhost:5000`**
 > - Akses Jaringan (dari **PC/Smartphone/Perangkat lain**): **`http://<IP_RASPBERRY_PI_ANDA>:5000`**
-![Color Info](colorinfo.png)
+> - Aktifkan switch "READ-ONLY write state" untuk mengaktifkan GPIO dengan click langsung.
+> - ![Color Info](colorinfo.png)
 
 ## Contoh Skrip Python yang Disertakan
 Repositori ini menyertakan skrip pengujian Python untuk mendemonstrasikan integrasi `gpiozero` yang berjalan berdampingan dengan dashboard GPIOweb:
@@ -94,7 +95,8 @@ Once installed and running, open a web browser and navigate to:
 > [!TIP]
 > - Local Access (from RaspberryPi): **`http://localhost:5000`**
 > - Network Access (from PC/other devices): **`http://<YOUR_RASPBERRY_PI_IP>:5000`**
-![Color Info](colorinfo.png)
+> - Toggle switch "READ-ONLY write state" to enable GPIO write.
+> - ![Color Info](colorinfo.png)
 
 ## Included Examples
 This repository includes Python test scripts to demonstrate `gpiozero` integration alongside the **GPIOweb dashboard**:
