@@ -96,16 +96,16 @@ systemctl enable gpioweb
 systemctl restart gpioweb
 
 # Definisi Warna
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-CYAN='\033[0;36m'
+GREEN='\033[40;0;32m'
+YELLOW='\033[40;1;33m'
+CYAN='\033[40;0;36m'
 BOLD='\033[1m'
 NC='\033[0m' # No Color (Reset ke default)
 
 echo "========================================="
 echo -e "${GREEN}Instalasi Selesai!${NC}"
 echo -e "Contoh ${YELLOW}python blinkled-example.py${NC}"
-echo -e "Contoh ${YELLOW}python test-example.py${NC}"
+echo -e "Contoh ${YELLOW}python rpi-gpio-example.py${NC}"
 echo "========================================="
 echo -e "${BOLD}Status service GPIOweb:${NC}"
 systemctl is-active gpioweb
