@@ -20,7 +20,7 @@ Sistem ini secara otomatis mendeteksi model Raspberry Pi Anda dan mengonfigurasi
 wget https://github.com/irfantuxz/gpioweb/archive/refs/heads/master.zip -O gpioweb-master.zip
 
 # Ekstrak file
-unzip gpioweb-master.zip
+unzip -o gpioweb-master.zip
 cd gpioweb-main
 
 # Jalankan script instalasi (membutuhkan akses sudo)
@@ -83,7 +83,7 @@ It automatically detects your Raspberry Pi model and configures the appropriate 
 wget https://github.com/irfantuxz/gpioweb/archive/refs/heads/master.zip -O gpioweb-master.zip
 
 # Extract the archive
-unzip gpioweb-master.zip
+unzip -o gpioweb-master.zip
 cd gpioweb-main
 
 # Run the setup script (requires sudo privileges)
