@@ -8,7 +8,7 @@
     <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
     <style>
         :root {
-            --bg-color: #0b1020;      --text-color: #e6eef8;   --board-bg: #06070a;
+            --bg-color: #0b101e;      --text-color: #e6eef8;   --board-bg: #06070a;
             --pin-power5v: #ff6b97;   --pin-power3v: #ff9f4d;  --pin-gnd: #2b2f3a;
             --pin-gpio-off: #3fb0ff;  --pin-gpio-on: #2fd27a;
         }
@@ -35,13 +35,39 @@
             font-size: 9px;
             padding: 2px 4px;
             border-radius: 3px;
-            margin-right: 5px;
+            margin-right: 0; 
+            min-width: 50px;
             font-weight: bold;
-            min-width: 25px;
             text-align: center;
         }
         .mode-in { background-color: #f1c40f; color: #000; } /* Kuning untuk Input */
         .mode-out { background-color: #9b59b6; color: #fff; } /* Ungu untuk Output */
+
+        /* Container untuk badge dan nama */
+        .pin-content {
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Jarak antara badge dan nama */
+            flex: 1;
+        }
+
+        .pin-right .pin-content {
+            flex-direction: row;
+            justify-content: flex-start;
+        }
+
+        .pin-left .pin-content {
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+
+        .pin-right .name {
+            text-align: right;
+        }
+
+        .pin-left .name {
+            text-align: left;
+        }
 
         /* Layout Pin */
         .pin { display: flex; align-items: center; justify-content: space-between; width: 280px; padding: 8px 10px; border-radius: 6px; font-size: 13px; font-weight: bold; color: #111; transition: 0.2s; box-sizing: border-box; }
@@ -144,7 +170,7 @@
 
             div.innerHTML = `
                 ${funcHtml}
-                <div style="display: flex; align-items: center;">
+                <div class="pin-content">
                     ${modeHtml}
                     <span class="name">${p.name}</span>
                 </div>
