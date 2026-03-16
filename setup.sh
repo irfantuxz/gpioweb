@@ -104,11 +104,12 @@ NC='\033[0m' # No Color (Reset ke default)
 
 echo "========================================="
 echo -e "${GREEN}Instalasi Selesai!${NC}"
-echo -e "Contoh ${YELLOW}python blinkled-example.py${NC}"
-echo -e "Contoh ${YELLOW}python rpi-gpio-example.py${NC}"
+echo -e "Contoh ${YELLOW}python ./gpioweb-main/blinkled-example.py${NC}"
+echo -e "Contoh ${YELLOW}python ./gpioweb-main/rpi-gpio-example.py${NC}"
 echo "========================================="
 echo -e "${BOLD}Status service GPIOweb:${NC}"
 systemctl is-active gpioweb
 echo -e "Silakan akses dashboard GPIOweb di ${CYAN}http://localhost:5000${NC}"
 echo -e "Atau lewat PC/HP local network di ${CYAN}http://ALAMAT_IP_RASPI:5000${NC}"
 echo "========================================="
+cd
