@@ -7,6 +7,14 @@
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>  -->
     <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
     <style>
+@media screen and (max-width: 600px) {
+    body {
+        /* Mengatur titik tumpu zoom di tengah atas */
+        zoom: 0.6; 
+        -moz-transform: scale(0.6); /* Fallback untuk Firefox lama */
+        -moz-transform-origin: top center;
+    }
+}
         :root {
             --bg-color: #0b101e;      --text-color: #e6eef8;   --board-bg: #06070a;
             --pin-power5v: #ff6b97;   --pin-power3v: #ff9f4d;  --pin-gnd: #2b2f3a;
@@ -138,11 +146,11 @@
         <span style="font-size: 12px; color: #a6adc8;">Enable Write State</span>
     </div>
 
-    <div class="board-container">
+    <!-- <div class="board-container"> -->
         <div class="board" id="mainBoard">
             <div class="header-j8" id="pin-container"></div>
         </div>
-    </div>
+    <!-- </div> -->
 
     <script>
         // Pemetaan Fungsi Berdasarkan Tabel Header GPIO Raspberry Pi 40-pin (J8)
