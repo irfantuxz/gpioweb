@@ -7,20 +7,19 @@
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>  -->
     <script src="{{ url_for('static', filename='js/socket.io.min.js') }}"></script>
     <style>
-@media screen and (max-width: 600px) {
-    body {
-        /* Mengatur titik tumpu zoom di tengah atas */
-        zoom: 0.6; 
-        -moz-transform: scale(0.6); /* Fallback untuk Firefox lama */
-        -moz-transform-origin: top center;
-    }
-}
+        @media screen and (max-width: 600px) {
+            body {
+                zoom: 0.6; 
+                -moz-transform: scale(0.6); /* Fallback untuk Firefox lama */
+                -moz-transform-origin: top center;
+            }
+        }
         :root {
             --bg-color: #0b101e;      --text-color: #e6eef8;   --board-bg: #06070a;
             --pin-power5v: #ff6b97;   --pin-power3v: #ff9f4d;  --pin-gnd: #2b2f3a;
             --pin-gpio-off: #3fb0ff;  --pin-gpio-on: #2fd27a;
         }
-        /* body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; } */
+        
         body { 
             font-family: 'Segoe UI', sans-serif; 
             background-color: var(--bg-color); 
@@ -28,22 +27,13 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            padding: 10px; /* Dikurangi untuk mobile */
+            padding: 10px;
             margin: 0; 
             min-height: 100vh;
             width: 100%;
             box-sizing: border-box;
-            overflow-x: hidden; /* Mencegah seluruh body goyang */
+            overflow-x: hidden;
         }
-
-        .board-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            overflow-x: auto; /* Memungkinkan scroll horizontal jika tetap tidak muat */
-            padding-bottom: 20px;
-        }
-        
         .subtitle { color: #a6adc8; margin-bottom: 20px; text-align: center; }
         
         /* UI Control Read/Write Mode */
@@ -57,61 +47,25 @@
         .mode-label { font-weight: bold; font-size: 14px; width: 110px; text-align: right; }
         .mode-label.write { color: #ff3b30; }
         .mode-label.read { color: #2fd27a; }
-
-        .board { 
-            background-color: var(--board-bg); 
-            padding: 20px; /* Dikurangi dari 30px */
-            border-radius: 12px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            margin: 0 auto;
-        }
-        /* .board { background-color: var(--board-bg); padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); } */
+        .board { background-color: var(--board-bg); padding: 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin: 0 auto; }
         .header-j8 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background-color: #222; padding: 20px; border-radius: 8px; border: 2px solid #333; }
 
         /* Gaya untuk label mode (IN/OUT) */
-        .pin .mode-badge {
-            font-size: 9px;
-            padding: 2px 4px;
-            border-radius: 3px;
-            margin-right: 0; 
-            min-width: 50px;
-            font-weight: bold;
-            text-align: center;
-        }
+        .pin .mode-badge { font-size: 9px; padding: 2px 4px; border-radius: 3px; margin-right: 0; min-width: 50px; font-weight: bold; text-align: center; }
         .mode-in { background-color: #f1c40f; color: #000; } /* Kuning untuk Input */
         .mode-out { background-color: #9b59b6; color: #fff; } /* Ungu untuk Output */
 
         /* Container untuk badge dan nama */
-        .pin-content {
-            display: flex;
-            align-items: center;
-            gap: 8px; /* Jarak antara badge dan nama */
-            flex: 1;
-        }
-
-        .pin-right .pin-content {
-            flex-direction: row;
-            justify-content: flex-start;
-        }
-
-        .pin-left .pin-content {
-            flex-direction: row-reverse;
-            justify-content: flex-end;
-        }
-
-        .pin-right .name {
-            text-align: right;
-        }
-
-        .pin-left .name {
-            text-align: left;
-        }
+        .pin-content { display: flex; align-items: center; gap: 8px; flex: 1; }
+        .pin-right .pin-content { flex-direction: row; justify-content: flex-start; }
+        .pin-left .pin-content { flex-direction: row-reverse; justify-content: flex-end; }
+        .pin-right .name { text-align: right;}
+        .pin-left .name { text-align: left; }
 
         /* Layout Pin */
         .pin { display: flex; align-items: center; justify-content: space-between; width: 280px; padding: 8px 10px; border-radius: 6px; font-size: 13px; font-weight: bold; color: #111; transition: 0.2s; box-sizing: border-box; }
         .pin-left { flex-direction: row; }
         .pin-right { flex-direction: row-reverse; }
-        
         .pin .number { font-size: 11px; background: rgba(255,255,255,0.4); padding: 3px 6px; border-radius: 4px; min-width: 14px; text-align: center; }
         .pin .name { flex: 1; text-align: center; padding: 0 5px; }
         .pin .function { font-size: 10px; color: #333; background: rgba(255,255,255,0.3); padding: 3px 6px; border-radius: 4px; width: 85px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -146,11 +100,9 @@
         <span style="font-size: 12px; color: #a6adc8;">Enable Write State</span>
     </div>
 
-    <!-- <div class="board-container"> -->
-        <div class="board" id="mainBoard">
-            <div class="header-j8" id="pin-container"></div>
-        </div>
-    <!-- </div> -->
+    <div class="board" id="mainBoard">
+        <div class="header-j8" id="pin-container"></div>
+    </div>
 
     <script>
         // Pemetaan Fungsi Berdasarkan Tabel Header GPIO Raspberry Pi 40-pin (J8)
