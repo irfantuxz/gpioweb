@@ -112,4 +112,4 @@ systemctl is-active gpioweb
 echo -e "Silakan akses dashboard GPIOweb di ${CYAN}http://localhost:5000${NC}"
 echo -e "Atau lewat PC/HP local network di ${CYAN}http://ALAMAT_IP_RASPI:5000${NC}"
 echo "========================================="
-cd
+cd ..
