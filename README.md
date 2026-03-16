@@ -17,6 +17,7 @@ Sistem ini secara otomatis mendeteksi model Raspberry Pi Anda dan mengonfigurasi
 
 ```bash
 # Unduh repositori
+cd
 wget https://github.com/irfantuxz/gpioweb/archive/refs/heads/master.zip -O gpioweb-master.zip
 
 # Ekstrak file
@@ -80,6 +81,7 @@ It automatically detects your Raspberry Pi model and configures the appropriate 
 
 ```Bash
 # Download the repository
+cd
 wget https://github.com/irfantuxz/gpioweb/archive/refs/heads/master.zip -O gpioweb-master.zip
 
 # Extract the archive
